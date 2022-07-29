@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import bunzz from "bunzz-sdk";
+import { REACT_APP_API_KEY, REACT_APP_DAPP_ID } from "./constant/env";
 
-const DAPP_ID = process.env.REACT_APP_DAPP_ID;
-const API_KEY = process.env.REACT_APP_API_KEY;
+const DAPP_ID = REACT_APP_DAPP_ID
+const API_KEY = REACT_APP_API_KEY
 
 
 
