@@ -9,7 +9,7 @@ const API_KEY = REACT_APP_API_KEY
 
 function App() {
   const [contract, setContract] = useState();
-  const [value, setValue] = useState(0);
+  const [value, setValue] = useState({ walletAddress: "", transferAmount: "", burnAmount: "", mintAmount: "" });
   const [userAddress, setUserAddress] = useState("");
   const [isWalletConnected, setIsWalletConnected] = useState(false);
   const [tokenName, setTokenName] = useState("");
@@ -123,7 +123,9 @@ function App() {
     init();
   }, []);
 
-  const handleChange = (e) => setValue(e.target.value);
+  const handleChange = (event) => {
+    setValue(prevFormData => ({ ...prevFormData, [event.target.name]: event.target.value }));
+  }
 
   return (
     <main className="main-container">
@@ -158,7 +160,7 @@ function App() {
               onChange={handleChange}
               name="walletAddress"
               placeholder="Wallet Address"
-              value={userAddress}
+              value={value.walletAddress}
             />
             <input
               type="text"
@@ -166,7 +168,7 @@ function App() {
               onChange={handleChange}
               name="transferAmount"
               placeholder={`0.0000 ${tokenSymbol}`}
-              value={value}
+              value={value.transferAmount}
             />
             <button className="btn-purple" onClick={transferToken}>
               Transfer Tokens
@@ -183,7 +185,7 @@ function App() {
                   onChange={handleChange}
                   name="burnAmount"
                   placeholder={`0.0000 ${tokenSymbol}`}
-                  value={value}
+                  value={value.burnAmount}
                 />
                 <button className="btn-purple" onClick={burnToken}>
                   Burn Tokens
@@ -198,7 +200,7 @@ function App() {
                   onChange={handleChange}
                   name="mintAmount"
                   placeholder={`0.0000 ${tokenSymbol}`}
-                  value={value}
+                  value={value.mintAmount}
                 />
                 <button className="btn-purple" onClick={mintToken}>
                   Mint Tokens
