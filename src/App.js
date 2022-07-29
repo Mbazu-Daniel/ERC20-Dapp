@@ -3,12 +3,6 @@ import { ethers, utils } from "ethers";
 import bunzz from "bunzz-sdk";
 import { REACT_APP_API_KEY, REACT_APP_DAPP_ID } from './constant/env';
 
-
-
-
-
-
-
 const DAPP_ID = REACT_APP_DAPP_ID;
 const API_KEY = REACT_APP_API_KEY;
 
@@ -64,7 +58,9 @@ function App() {
         let tokenSymbol = await tokenContract.symbol();
         let tokenSupply = await tokenContract.totalSupply();
         let tokenOwner =  await handler.getSignerAddress();
-        tokenSupply=utils.formatEther(tokenSupply);
+        // tokenSupply=utils.formatEther(tokenSupply);
+        tokenSupply=utils.parseEther(tokenSupply);
+
 
 
 
@@ -99,25 +95,19 @@ function App() {
 
         const tokenContract = handler.getContract("Token (ERC20)");
 
-        let amount = utils.parseEther(inputValue.transferAmount);
+       
+        let txn = await tokenContract.transfer(inputValue.walletAddress, utils.parseEther(inputValue.transferAmount));
+
+         // let amount = utils.parseEther(inputValue.transferAmount);
         // let transferAmount = utils.formatEther(amount)
 
-        console.log(amount);
+        // console.log(amount);
 
-        let txn = await tokenContract.transfer(inputValue.walletAddress, utils.formatEther(amount));
-        console.log(txn);
+        // let txn = await tokenContract.transfer(inputValue.walletAddress, utils.formatEther(amount));
+        // console.log(txn);
 
-        // let txn = await tokenContract.transfer(inputValue.walletAddress, utils.parseEther(inputValue.transferAmount));
 
-   
-//   // From String to BigNumber
-// var amount = ethers.utils.parseEther('5000.0');
-// // BigNumber { _bn: <BN: 10f0cf064dd59200000> }
-
-// From BigNumber to String:
-// var amount = ethers.utils.formatEther(amount);
-// // "5000.0"
-
+  
 
 
         
