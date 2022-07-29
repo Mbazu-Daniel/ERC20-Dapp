@@ -1,18 +1,10 @@
 import { useState, useEffect } from "react";
-import { ethers, utils } from "ethers";
 import bunzz from "bunzz-sdk";
-import { REACT_APP_API_KEY, REACT_APP_DAPP_ID } from "./constant/env";
 
-const DAPP_ID = REACT_APP_DAPP_ID;
-const API_KEY = REACT_APP_API_KEY;
+const DAPP_ID = process.env.REACT_APP_DAPP_ID;
+const API_KEY = process.env.REACT_APP_API_KEY;
 
-const init = async () => {
-  const handler = await bunzz.initializeHandler({
-    dappId: DAPP_ID,
-    apiKey: API_KEY,
-  });
-  return handler;
-};
+
 
 function App() {
   const [contract, setContract] = useState();
@@ -24,6 +16,7 @@ function App() {
   const [tokenTotalSupply, setTokenTotalSupply] = useState(0);
   const [isTokenOwner, setIsTokenOwner] = useState(false);
   const [tokenOwnerAddress, setTokenOwnerAddress] = useState(null);
+  const [yourWalletAddress, setYourWalletAddress] = useState(null);
   const [error, setError] = useState(null);
 
   const checkIfWalletIsConnected = async () => {
@@ -34,8 +27,9 @@ function App() {
         });
         const account = accounts[0];
         setIsWalletConnected(true);
-        setUserAddress(account);
+        setYourWalletAddress(account);
         console.log("Account Connected: ", account);
+        
       } else {
         setError("Install a MetaMask wallet to get our token.");
         console.log("No Metamask detected");
@@ -45,42 +39,55 @@ function App() {
     }
   };
 
-  // GETTER FUNCTION
-  const getTokenInfo = async () => {
-    let tokenName = await tokenContract.name();
-    let tokenSymbol = await tokenContract.symbol();
-    let tokenSupply = await tokenContract.totalSupply();
-    let tokenOwner = await tokenContract.owner();
-
-    setTokenName(`${tokenName} 🦊`);
-    setTokenSymbol(tokenSymbol);
-    setTokenTotalSupply(tokenTotalSupply);
-    setTokenOwnerAddress(tokenOwner);
-
-    if (account.toLowerCase() === tokenOwner.toLowerCase()) {
-      setIsTokenOwner(true);
-    }
-
-    console.log("Token Name: ", tokenName);
-    console.log("Token Symbol: ", tokenSymbol);
-    console.log("Token Supply: ", tokenSupply);
-    console.log("Token Owner: ", tokenOwner);
-  };
 
   const init = async () => {
     try {
-      const handler = await init();
-      const contract = await handler.getContract("Token (ERC20)");
+      const handler = await bunzz.initializeHandler({
+        dappId: DAPP_ID,
+        apiKey: API_KEY,
+      });
+      const tokenContract = await handler.getContract("Token (ERC20)");
       const userAddress = await handler.getSignerAddress();
-
+    
       // Set local state
       setContract(contract);
       setUserAddress(userAddress);
-      getTokenInfo();
+   
+      const accounts = await window.ethereum.request({ method: "eth_requestAccounts", });
+      const account = accounts[0];
+
+
+      // token details
+      let tokenName = await tokenContract.name();
+      let tokenSymbol = await tokenContract.symbol();
+      let tokenSupply = await tokenContract.totalSupply();
+      let tokenOwner = await tokenContract.owner();
+  
+      setTokenName(`${tokenName} 🦊`);
+      setTokenSymbol(tokenSymbol);
+      setTokenTotalSupply(tokenTotalSupply);
+      setTokenOwnerAddress(tokenOwner);
+  
+      if (account.toLowerCase() === tokenOwner.toLowerCase()) {
+        setIsTokenOwner(true);
+      }
+  
+      console.log("Token Name: ", tokenName);
+      console.log("Token Symbol: ", tokenSymbol);
+      console.log("Token Supply: ", tokenSupply);
+      console.log("Token Owner: ", tokenOwner);
+
     } catch (error) {
       console.log(error);
     }
   };
+
+
+ 
+
+
+
+
 
   /** 
  @dev - Transfer token function
@@ -190,7 +197,7 @@ function App() {
                   onChange={handleChange}
                   name="mintAmount"
                   placeholder={`0.0000 ${tokenSymbol}`}
-                  value={inputValue.mintAmount}
+                  value={value}
                 />
                 <button className="btn-purple" onClick={mintToken}>
                   Mint Tokens
