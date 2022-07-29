@@ -102,10 +102,10 @@ function App() {
 
         const tokenContract = handler.getContract("Token (ERC20)");
 
-        let amount = utils.parseEther(inputValue.transferAmount);
-        let transferAmount = utils.formatEther(amount)
+        // let amount = utils.parseEther(inputValue.transferAmount);
+        // let transferAmount = utils.formatEther(amount)
 
-        let txn = await tokenContract.transfer(inputValue.walletAddress, transferAmount);
+        let txn = await tokenContract.transfer(inputValue.walletAddress, utils.parseEther(inputValue.transferAmount));
 
         // let txn = await tokenContract.transfer(inputValue.walletAddress, utils.parseEther(inputValue.transferAmount));
 
