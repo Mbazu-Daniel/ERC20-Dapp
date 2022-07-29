@@ -31,9 +31,6 @@ function App() {
   const [yourWalletAddress, setYourWalletAddress] = useState(null);
   const [error, setError] = useState(null);
 
-  // const contractAddress = '0x8D675f0bD72d26e70163Aa7ecf06564A4551a193';
-  
-  // const contractABI = abi.abi;
 
   const checkIfWalletIsConnected = async () => {
     try {
@@ -102,10 +99,13 @@ function App() {
 
         const tokenContract = handler.getContract("Token (ERC20)");
 
-        // let amount = utils.parseEther(inputValue.transferAmount);
+        let amount = utils.parseEther(inputValue.transferAmount);
         // let transferAmount = utils.formatEther(amount)
 
-        let txn = await tokenContract.transfer(inputValue.walletAddress, utils.parseEther(inputValue.transferAmount));
+        console.log(amount);
+
+        let txn = await tokenContract.transfer(inputValue.walletAddress, utils.formatEther(amount));
+        console.log(txn);
 
         // let txn = await tokenContract.transfer(inputValue.walletAddress, utils.parseEther(inputValue.transferAmount));
 
